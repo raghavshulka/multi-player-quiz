@@ -1,7 +1,66 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
+interface QuizQuestion {
+  topic: string;
+  question: string;
+  option1: string;
+  option2: string;
+  option3: string;
+  option4: string;
+  correctOption: string;
+  timer: number;
+  image?: string;
+}
 
 const Create = () => {
+  const [quizData, setQuizData] = useState<QuizQuestion>({
+    topic: "",
+    question: "",
+    option1: "",
+    option2: "",
+    option3: "",
+    option4: "",
+    correctOption: "",
+    timer: 30,
+  });
+  const [success, setSuccess] = useState(false);
+
+  const handleInputChange = (e: any) => {
+    const { id, value } = e.target;
+    setQuizData((prev) => ({
+      ...prev,
+      [id]: id === "timer" ? parseInt(value) || 0 : value,
+    }));
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setSuccess(false);
+
+    try {
+      await axios.post(
+        "http://localhost:3000/api/v1/question/create",
+        quizData
+      );
+      setSuccess(true);
+      //empty ho gya
+      setQuizData({
+        topic: "",
+        question: "",
+        option1: "",
+        option2: "",
+        option3: "",
+        option4: "",
+        correctOption: "",
+        timer: 0,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <main className="flex-1">
@@ -13,57 +72,44 @@ const Create = () => {
                   Create Your Own Quiz
                 </h1>
                 <p className="text-lg text-gray-600 md:text-xl">
-                Customize your quiz by adding topics, questions, and options.
+                  Customize your quiz by adding topics, questions, and options.
                 </p>
               </div>
               <div className="flex flex-col items-start space-y-4">
-                <form className="w-full max-w-md space-y-6">
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="topic"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Topic
-                    </label>
-                    <input
-                      id="topic"
-                      type="text"
-                      placeholder="Enter quiz topic"
-                      className="border border-gray-300 p-2 rounded-md mt-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="question"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Question
-                    </label>
-                    <input
-                      id="question"
-                      placeholder="Enter quiz question"
-                      className="border border-gray-300 p-2 rounded-md mt-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="options"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Options
-                    </label>
-                    <input
-                      id="options"
-                      placeholder="Enter quiz options (separated by commas)"
-                      className="border border-gray-300 p-2 rounded-md mt-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                <form
+                  onSubmit={handleSubmit}
+                  className="w-full max-w-md space-y-6"
+                >
+                  {Object.entries(quizData).map(([key, value]) => (
+                    <div key={key} className="flex flex-col">
+                      <label
+                        htmlFor={key}
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </label>
+                      <input
+                        id={key}
+                        type={key === "timer" ? "number" : "text"}
+                        value={value}
+                        onChange={handleInputChange}
+                        placeholder={`Enter ${key}`}
+                        className="border border-gray-300 p-2 rounded-md mt-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                  ))}
                   <button
                     type="submit"
-                    className="bg-black text-xl px-4 py-2 rounded-md text-white hover:bg-gray-800 transition w-full"
+                    className="bg-black text-xl px-4 py-2 rounded-md text-white hover:bg-gray-800 transition w-full disabled:bg-gray-400"
                   >
                     Create Quiz
                   </button>
+                  {success && (
+                    <p className="text-green-500">
+                      {` ${quizData.topic} Quiz question created successfully!`}
+                    </p>
+                  )}
                 </form>
               </div>
             </div>

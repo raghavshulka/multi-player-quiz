@@ -3,6 +3,7 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import { configDotenv } from "dotenv";
 import db from "./db";
+import cors from 'cors'
 //routes
 import questionsRoute from "./routes/questionsRoute";
 import userRoute from "./routes/userRoute";
@@ -12,6 +13,7 @@ import { Admin } from "./websockets/gameSocket";
 const app = express();
 configDotenv({ path: "./.env" });
 db();
+app.use(cors())
 app.use(express.json())
 //creatingroutes
 app.use("/api/v1/user", userRoute);
