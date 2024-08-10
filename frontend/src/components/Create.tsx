@@ -41,7 +41,7 @@ const Create = () => {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/v1/question/create",
+        "https://multi-player-quiz.onrender.com/api/v1/question/create",
         quizData
       );
       setSuccess(true);
