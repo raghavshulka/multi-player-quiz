@@ -15,7 +15,7 @@ yarn-error.log*
 
 # Build output
 # dist/
-build/
+# build/
 
 # Optional: TypeScript build output (if using TypeScript)
 *.tsbuildinfo
