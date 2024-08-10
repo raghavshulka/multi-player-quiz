@@ -14,7 +14,7 @@ yarn-error.log*
 .env.production
 
 # Build output
-dist/
+# dist/
 build/
 
 # Optional: TypeScript build output (if using TypeScript)
