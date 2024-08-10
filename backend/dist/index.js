@@ -30,7 +30,7 @@ exports.io = new socket_io_1.Server(server);
 app.get("/", (req, res) => {
     res.json("hello kasa ho app log");
 });
-const PORT = 3000;
+const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
