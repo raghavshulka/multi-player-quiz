@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 interface QuizQuestion {
-  topic: string;
   question: string;
+  topic: string;
   option1: string;
   option2: string;
   option3: string;
@@ -13,6 +13,9 @@ interface QuizQuestion {
   timer: number;
   image?: string;
 }
+
+
+
 
 const Create = () => {
   const [quizData, setQuizData] = useState<QuizQuestion>({
@@ -53,13 +56,14 @@ const Create = () => {
         option2: "",
         option3: "",
         option4: "",
-        correctOption: "",
+      correctOption: "",  
         timer: 0,
       });
     } catch (err) {
       console.error(err);
     }
   };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
