@@ -18,24 +18,39 @@ const app = express_1.default.Router();
 app.post("/new", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name } = req.body;
-        const data = yield userSchema_1.userSchemas.create({
-            name: name,
-        });
-        res.json({
-            data,
-            msg: "succesfull of geeting name atribute ",
-            status: 200,
-        });
+        if (!name) {
+            return res.status(400).json({ msg: "Please fill  fields", status: 400 });
+        }
+        const existingUser = yield userSchema_1.userSchemas.findOne({ name });
+        if (existingUser) {
+            return res.status(200).json(existingUser);
+        }
+        const newUser = yield userSchema_1.userSchemas.create({ name });
+        return res.status(201).json(newUser);
     }
     catch (error) {
-        console.error(error);
-        res.json({ msg: "failure of geeting name atribute ", status: 500 });
+        return res
+            .status(500)
+            .json({ error: "Internal Server Error", message: error.message });
     }
 }));
 app.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield userSchema_1.userSchemas.find({});
         res.json({ data, status: 200 });
+    }
+    catch (error) {
+        res.json({ msg: "error in getting names", status: 501 });
+    }
+}));
+app.post("/detail", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { name } = req.body;
+        if (!name) {
+            return res.json({ status: 400 });
+        }
+        const existingUser = yield userSchema_1.userSchemas.findOne({ name });
+        res.json({ existingUser });
     }
     catch (error) {
         res.json({ msg: "error in getting names", status: 501 });

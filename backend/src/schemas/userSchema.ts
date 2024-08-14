@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
+    unique:true,
   },
   socketid: {
     type: String,
@@ -11,9 +12,9 @@ const userSchema = new mongoose.Schema({
     default: "",
   },
   score: {
-    type: String,
+    type: Number,
     require: true,
-    default: "",
+    default: 0,
   },
 });
 

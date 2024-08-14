@@ -2,97 +2,87 @@ import { Server, Socket } from "socket.io";
 import { userSchemas } from "../schemas/userSchema";
 import { quizSchema } from "../schemas/quizSchema";
 
-export function Admin(io: Server, roomName: string) {
+export function initializeSocketServer(io: Server) {
   io.on("connection", (socket: Socket) => {
-    console.log(`New connection: ${socket.id}`);
-    socket.on("connect", handleConnect(socket));
-    socket.on("invite", handleInvite(socket, roomName));
-    socket.on("accept", handleAccept(io, socket));
+    console.log(`New connection connected in server : ${socket.id}`);
+
+    socket.on("connect_user", handleConnectUser(socket));
+    socket.on("create_room", handleCreateRoom(socket));
+    socket.on("join_room", handleJoinRoom(io, socket));
+    socket.on("disconnect", () => {
+      console.log(`user got disconnect in server ${socket.id} ❌`);
+    });
   });
 }
 
-function handleConnect(socket: Socket) {
+function handleConnectUser(socket: Socket) {
   return async (data: { name: string }) => {
-    // console.log(`New connection: ${socket.id}`);
-    console.log(`Received connect event with data: ${JSON.stringify(data)}`);
+    console.log(`Received connect event with data: ${JSON.stringify(data.name)}`);
     try {
       await userSchemas.findOneAndUpdate(
         { name: data.name },
-        { socketid: socket.id }
+        { socketid: socket.id },
       );
-
-      console.log(`Updated socketid for ${data.name} to ${socket.id}`);
+      console.log(`Updated socketId for ${data.name} to ${socket.id}`);
+      socket.emit("user_connected", { success: true });
     } catch (error) {
       console.error("Error updating user:", error);
+      socket.emit("user_connected", {
+        success: false,
+        error: "Failed to update user",
+      });
     }
   };
 }
 
-
-function handleInvite(socket: Socket, roomName: string) {
+function handleCreateRoom(socket: Socket) {
   return (data: { roomName: string }) => {
     try {
-      if (data.roomName === roomName) {
-        const inviteLink = `${process.env.BASE_URL}/join/${roomName}?id=${socket.id}`;
-        socket.emit("invite-link", inviteLink);
-        return inviteLink;
-      }
+      const roomName = data.roomName || `room-${Date.now()}`;
+      socket.join(roomName);
+      const inviteLink = `${process.env.BASE_URL}/join/${roomName}`;
+      socket.emit("room_created", { roomName, inviteLink });
     } catch (error) {
-      console.error("Error creating invite link:", error);
-      socket.emit("error", "Failed to create invite link");
+      console.error("Error creating room:", error);
+      socket.emit("error", "Failed to create room");
     }
   };
 }
 
-function handleAccept(io: Server, socket: Socket) {
-  return async (data: {
-    topic: string;
-    socketid: string;
-    mysocketid: string;
-  }) => {
+function handleJoinRoom(io: Server, socket: Socket) {
+  return async (data: { roomName: string; topic: string }) => {
     try {
-      const count = await quizSchema.countDocuments({ topic: data.topic });
-      const questions = await getRandomQuestions(data.topic, count, 5);
+      const { roomName, topic } = data;
+      const roomExists = io.sockets.adapter.rooms.has(roomName);
 
-      if (questions.length === 5)  {
-       await  io
-          .to(data.socketid)
-          .to(data.mysocketid)
-          .emit("accepted", questions);
+      if (!roomExists) {
+        return socket.emit("error", "Room does not exist");
+      }
+
+      socket.join(roomName);
+      const questions = await getRandomQuestions(topic, 5);
+
+      if (questions.length === 5) {
+        io.to(roomName).emit("game_starting", { questions });
       } else {
-        console.log(
-          `Failed to retrieve enough questions. Retrieved: ${questions.length}`
-        );
         socket.emit("error", "Failed to retrieve enough questions");
       }
     } catch (error) {
-      console.error("Error in accept event handler:", error);
+      console.error("Error in join room handler:", error);
       socket.emit("error", "An error occurred while processing your request");
     }
   };
 }
 
-async function getRandomQuestions(
-  topic: string,
-  totalCount: number,
-  desiredCount: number
-) {
-  const questions = [];
-  const usedIndices = new Set<number>();
-
-  while (questions.length < desiredCount && usedIndices.size < totalCount) {
-    const randomIndex = Math.floor(Math.random() * totalCount);
-
-    if (!usedIndices.has(randomIndex)) {
-      usedIndices.add(randomIndex);
-
-      const question = await quizSchema.findOne({ topic }).skip(randomIndex);
-
-      if (question) {
-        questions.push(question);
-      }
-    }
+async function getRandomQuestions(topic: string, desiredCount: number) {
+  try {
+    const questions = await quizSchema.aggregate([
+      { $match: { topic } },
+      { $sample: { size: desiredCount } },
+    ]);
+    return questions;
+  } catch (error) {
+    console.error("Error retrieving random questions:", error);
+    return [];
   }
-
-  return questions;
 }

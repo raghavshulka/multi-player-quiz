@@ -1,2 +1,2 @@
 import { Server } from "socket.io";
-export declare function Admin(io: Server, roomName: string): void;
+export declare function initializeSocketServer(io: Server): void;

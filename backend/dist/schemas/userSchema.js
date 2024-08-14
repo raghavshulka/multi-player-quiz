@@ -9,6 +9,7 @@ const userSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         require: true,
+        unique: true,
     },
     socketid: {
         type: String,
@@ -16,9 +17,9 @@ const userSchema = new mongoose_1.default.Schema({
         default: "",
     },
     score: {
-        type: String,
+        type: Number,
         require: true,
-        default: "",
+        default: 0,
     },
 });
 exports.userSchemas = mongoose_1.default.model("Users", userSchema);
