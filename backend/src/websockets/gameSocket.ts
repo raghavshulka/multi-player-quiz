@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { userSchemas } from "../schemas/userSchema";
 import { quizSchema } from "../schemas/quizSchema";
 
-export function initializeSocketServer(io: Server) {
+ function gameSocket(io: Server) {
   io.on("connection", (socket: Socket) => {
     console.log(`New connection connected in server : ${socket.id}`);
 
@@ -86,3 +86,5 @@ async function getRandomQuestions(topic: string, desiredCount: number) {
     return [];
   }
 }
+
+export default gameSocket;
