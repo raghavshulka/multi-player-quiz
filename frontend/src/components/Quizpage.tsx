@@ -9,28 +9,31 @@ interface Question {
 }
 
 const Quizpage: React.FC = () => {
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      question: "What is the capital city of Australia?",
-      answers: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
-      topic: "Geography",
-    },
-    {
-      question: "What is the largest country in the world?",
-      answers: ["Canada", "China", "USA", "Russia"],
-      topic: "Geography",
-    },
-    {
-      question: "What is the tallest mountain in the world?",
-      answers: ["K2", "Kangchenjunga", "Everest", "Makalu"],
-      topic: "Geography",
-    },
-  ]);
-
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    setQuestions([
+      {
+        question: "What is the capital city of Australia?",
+        answers: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+        topic: "Geography",
+      },
+      {
+        question: "What is the largest country in the world?",
+        answers: ["Canada", "China", "USA", "Russia"],
+        topic: "Geography",
+      },
+      {
+        question: "What is the tallest mountain in the world?",
+        answers: ["K2", "Kangchenjunga", "Everest", "Makalu"],
+        topic: "Geography",
+      },
+    ]);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -88,6 +91,10 @@ const Quizpage: React.FC = () => {
       </div>
     );
   };
+
+  if (questions.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
 
