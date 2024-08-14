@@ -61,12 +61,11 @@ const Hero = () => {
             <p className="text-sm md:text-base text-slate-500 text-center">
               Dive into the past and test your historical knowledge.
             </p>
-            <a
-              href="#"
+            <Link to={'/question'}
               className="inline-flex h-9 items-center justify-center rounded-md bg-black text-white px-4 text-sm font-medium shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 disabled:pointer-events-none disabled:opacity-50"
             >
               Start Quiz
-            </a>
+            </Link>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-6 border rounded-lg shadow w-full md:w-1/3 bg-white">
@@ -162,7 +161,7 @@ const Hero = () => {
             to="#"
             className="text-xs text-gray-600 hover:underline underline-offset-4"
           >
-            Terms of Service
+            Terms of Servic
           </Link>
           <Link
             to="#"

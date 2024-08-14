@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ClientSocket from "./ClientSocket";
-import Enter from "./Enter";
-const Cratequiz = () => {
-  const [questions, setQuestions] = useState([
+
+interface Question {
+  question: string;
+  answers: string[];
+  topic: string;
+}
+
+const Quizpage: React.FC = () => {
+  const [questions, setQuestions] = useState<Question[]>([
     {
       question: "What is the capital city of Australia?",
       answers: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
@@ -22,12 +28,11 @@ const Cratequiz = () => {
   ]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentAnswer, setCurrentAnswer] = useState(null);
+  const [currentAnswer, setCurrentAnswer] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30);
-  const [progress, setProgress] = useState(0); // Progress in 
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Timer functionality
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
@@ -35,25 +40,24 @@ const Cratequiz = () => {
   }, []);
 
   useEffect(() => {
-    // Reset timer and progress when question changes
     setTimeLeft(30);
     setProgress(((currentQuestionIndex + 1) / questions.length) * 100);
   }, [currentQuestionIndex, questions.length]);
 
-  
+  const handleAnswerClick = (answer: string) => {
+    setCurrentAnswer(answer);
+  };
 
-  // Handle Next button click
   const handleNextClick = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       setCurrentAnswer(null);
     } else {
-      // Optionally handle the end of the quiz
       console.log("Quiz completed!");
     }
   };
 
-  function ClockIcon(props) {
+  const ClockIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     return (
       <svg
         {...props}
@@ -72,9 +76,9 @@ const Cratequiz = () => {
         <polyline points="12 6 12 12 16 14" />
       </svg>
     );
-  }
+  };
 
-  function ProgressBar({ progress }) {
+  const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => {
     return (
       <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
         <div
@@ -83,7 +87,7 @@ const Cratequiz = () => {
         ></div>
       </div>
     );
-  }
+  };
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -135,10 +139,10 @@ const Cratequiz = () => {
             </div>
           </div>
         </div>
-        <ClientSocket/>
+        <ClientSocket />
       </section>
     </div>
   );
 };
 
-export default Cratequiz;
+export default Quizpage;

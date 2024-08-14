@@ -3,9 +3,10 @@ import Create from "./components/Create";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Profile from "./components/Profile";
-import Createquiz from "./components/Cratequiz";
+import Createquiz from "./components/Quizpage";
 import Enter from "./components/Enter";
 import JoinRoom from './components/Joinroom'
+import Quizpage from "./components/Quizpage";
 
 const ProtectedLayout = () => {
   const isAuthenticated = !!localStorage.getItem("auth");
@@ -42,6 +43,8 @@ const App = () => {
             <Route path="/create" element={<Create />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/join" element={<JoinRoom />} />
+            <Route path="/question" element={<Quizpage />} />
+
 
           </Route>
           
