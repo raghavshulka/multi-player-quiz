@@ -18,11 +18,16 @@ const PuzzleIcon = (props:any) => (
   
 const Header = () => {
   return (
-    <div className=" mx-12 my-6 flex flex-row justify-between items-center">
+    <div className=" md:mx-12 mx-4 my-6 flex flex-row justify-center md:justify-between items-center">
         <Link to={'/'} >
       <div><PuzzleIcon/></div>
         </Link>
       <div className=" flex justify-center items-center gap-[3rem] ">
+      <Link to={"/join"}>
+          <p className="text-md  font-medium hover:underline underline-offset-4">
+            Join-Qz
+          </p>
+        </Link>
         <Link to={"/create"}>
           <p className="text-md  font-medium hover:underline underline-offset-4">
             Create-Qz

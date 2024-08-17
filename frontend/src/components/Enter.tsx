@@ -15,15 +15,20 @@ const Enter = () => {
   async function handlerClick(e: any) {
     e.preventDefault();
     try {
-      const res = await axios.post("https://multi-player-quiz.onrender.com/api/v1/user/new", {
-        name: name,
-      });
+      const res = await axios.post(
+        "https://multi-player-quiz.onrender.com/api/v1/user/new",
+        {
+          name: name,
+        }
+      );
       await localStorage.setItem("auth", res.data.name);
     } catch (error) {
       console.error(error);
     }
     setName("");
-    navigate("/profile"); // Navigate to the profile page after successful login
+    // setInterval(() => {
+    //   navigate("/profile"); // Navigate to the profile page after successful login
+    // }, 2000);
   }
 
   return (

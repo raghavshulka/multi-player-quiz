@@ -18,7 +18,7 @@ const Hero = () => {
             <br className="hidden md:inline" /> crafted quizzes.
           </p>
           <div className="self-start">
-            <Link to={"/join"}>
+            <Link to={"/start"}>
               <button className="bg-black text-lg md:text-xl px-4 py-2 rounded-md text-white hover:bg-gray-800 transition">
                 Start a Quiz
               </button>
@@ -61,7 +61,8 @@ const Hero = () => {
             <p className="text-sm md:text-base text-slate-500 text-center">
               Dive into the past and test your historical knowledge.
             </p>
-            <Link to={'/question'}
+            <Link
+              to={"/question"}
               className="inline-flex h-9 items-center justify-center rounded-md bg-black text-white px-4 text-sm font-medium shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 disabled:pointer-events-none disabled:opacity-50"
             >
               Start Quiz
