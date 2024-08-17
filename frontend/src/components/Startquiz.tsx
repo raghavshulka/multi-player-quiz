@@ -1,8 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { useContext } from "react";
-import { allContext } from "../Context/CreateStore";
 type Data = {
   roomName: string;
   username: string;
@@ -11,7 +9,6 @@ type Data = {
 };
 
 const Startquiz = () => {
-  const { time, setTime } = useContext(allContext);
   //main
   const username: string = localStorage.getItem("auth") as string;
   const [topic, setTopic] = useState<{ topic: string }[]>([]);
@@ -20,10 +17,11 @@ const Startquiz = () => {
   //sockets
   const [socketData, setSocketData] = useState<Data | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [time, setTime] = useState<number | null>(null);
 
   const handleChange = (e: any) => {
-    const value: number = e.target.value;
-    setTime(Number(value));
+    const number = e.target.value;
+    setTime(number(number));
   };
 
   //output
@@ -67,7 +65,9 @@ const Startquiz = () => {
   }, [socket]);
 
   async function getData() {
-    const val = await axios.get("https://multi-player-quiz.onrender.com/api/v1/question/topic");
+    const val = await axios.get(
+      "https://multi-player-quiz.onrender.com/api/v1/question/topic"
+    );
     setTopic(val.data.data);
   }
 
@@ -75,21 +75,17 @@ const Startquiz = () => {
     e.preventDefault();
 
     if (socket) {
-      // Connect user
       socket.emit("connect_user", { name: username });
 
-      // Create a room
       socket.emit("create_room", {
         roomName: room,
         topic: selectedTopic,
         time: time,
       });
 
-      // Join a room
       socket.emit("join_room", { roomName: room });
     }
 
-    // Reset the form fields
     setRoom("");
     setSelectedTopic("");
   }
