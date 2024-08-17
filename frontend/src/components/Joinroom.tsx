@@ -66,6 +66,8 @@ const JoinRoom = () => {
       }, time);
 
       return () => clearTimeout(timer); // Cleanup the timeout on unmount or time change
+    } else {
+      navigate("/question");
     }
   }, [time, questionReceived, navigate]);
 
