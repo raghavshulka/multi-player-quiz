@@ -50,7 +50,7 @@ function handleCreateRoom(socket: Socket) {
       // Store the topic information in the socket's data
       socket.data.roomTopic = topic;
 
-      const inviteLink = `${"http://localhost:3000"}/join/${roomName}`;
+      const inviteLink = `${"https://multi-player-quiz.onrender.com"}/join/${roomName}`;
       socket.emit("room_created", { roomName, inviteLink, time });
 
       roomInfo.set(roomName, { time });
