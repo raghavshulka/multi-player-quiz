@@ -9,7 +9,10 @@ const db = () => {
   }
 
   mongoose
-    .connect(mongoUri)
+    .connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000, 
+      socketTimeoutMS: 45000,
+    })
     .then(() => {
       console.log("connected to db");
     })

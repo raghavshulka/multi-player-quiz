@@ -44,7 +44,25 @@ app.post("/detail", async (req, res) => {
 
     const existingUser = await userSchemas.findOne({ name });
 
-    res.json({ existingUser});
+    res.json({ existingUser });
+  } catch (error) {
+    res.json({ msg: "error in getting names", status: 501 });
+  }
+});
+
+app.post("/score", async (req, res) => {
+  const { name, score } = req.body;
+  try {
+    const data = await userSchemas.findOneAndUpdate(
+      {
+        name:name,
+      },
+      {
+        score:score,
+      }
+    );
+
+    res.json({ data , status: 200 });
   } catch (error) {
     res.json({ msg: "error in getting names", status: 501 });
   }
