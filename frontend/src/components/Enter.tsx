@@ -27,7 +27,7 @@ const Enter = () => {
     }
     setName("");
     // setInterval(() => {
-    //   navigate("/profile"); // Navigate to the profile page after successful login
+      navigate("/"); 
     // }, 2000);
   }
 

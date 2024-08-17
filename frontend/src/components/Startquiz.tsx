@@ -18,10 +18,9 @@ const Startquiz = () => {
   const [socketData, setSocketData] = useState<Data | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [time, setTime] = useState<number | null>(null);
-
+  console.log(time);
   const handleChange = (e: any) => {
-    const number = e.target.value;
-    setTime(number(number));
+    setTime(e.target.value);
   };
 
   //output
