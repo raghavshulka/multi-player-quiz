@@ -66,17 +66,6 @@ const Startquiz = () => {
   }, [socket]);
 
   useEffect(() => {
-    if (roomJoined ) {
-      console.log("Navigating after time delay:", time);
-      const timer = setTimeout(() => {
-        navigate("/join");
-      }, );
-
-      return () => clearTimeout(timer);
-    }
-  }, [roomJoined, navigate]);
-
-  useEffect(() => {
     if (timerStarted && remainingTime !== null && remainingTime > 0) {
       const intervalId = setInterval(() => {
         setRemainingTime((prevTime) => (prevTime !== null ? prevTime - 1 : 0));
@@ -120,6 +109,13 @@ const Startquiz = () => {
 
     setRoom("");
     setSelectedTopic("");
+  }
+
+  function handleJoinsRoom() {
+    if (roomJoined) {
+      console.log("Navigating after time delay:", time);
+      navigate("/join");
+    }
   }
 
   return (
@@ -198,17 +194,25 @@ const Startquiz = () => {
           </div>
         </form>
         {socketData && (
-          <div className="mt-6">
-            <h3 className="font-semibold">Your Room:</h3>
-            <pre className="bg-gray-100 p-3 rounded mt-2 overflow-x-auto">
-              {inviteroom}
-            </pre>
+          <>
+            <div className="mt-6">
+              <h3 className="font-semibold">Your Room:</h3>
+              <pre className="bg-gray-100 p-3 rounded mt-2 overflow-x-auto">
+                {inviteroom}
+              </pre>
 
-            <h3 className="font-semibold">Room Link:</h3>
-            <pre className="bg-gray-100 p-3 rounded mt-2 overflow-x-auto">
-              {invite}
-            </pre>
-          </div>
+              <h3 className="font-semibold">Room Link:</h3>
+              <pre className="bg-gray-100 p-3 rounded mt-2 overflow-x-auto">
+                {invite}
+              </pre>
+            </div>
+            <button
+              onClick={handleJoinsRoom}
+              className="w-full mt-3 py-3 bg-black/90 hover:opacity-90 text-white rounded-md font-semibold transition duration-200"
+            >
+              Join Room
+            </button>
+          </>
         )}
       </div>
     </div>
