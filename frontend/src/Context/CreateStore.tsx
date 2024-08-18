@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { io, Socket } from "socket.io-client";
 
 interface User {
   name: string;
@@ -14,7 +15,7 @@ interface ContextType {
   setResult: React.Dispatch<React.SetStateAction<any[] | null>>;
   data: any[] | null;
   setData: React.Dispatch<React.SetStateAction<any[] | null>>;
-  
+  socket: Socket | null;
 }
 
 export const allContext = createContext<ContextType>({
@@ -25,7 +26,7 @@ export const allContext = createContext<ContextType>({
   setResult: () => {},
   data: null,
   setData: () => {},
-
+  socket: null,
 });
 
 interface Props {
@@ -37,7 +38,9 @@ const Store: React.FC<Props> = ({ children }) => {
   const [userDetail, setUserDetail] = useState<User>({ name: "", score: 0 });
   const [leaderboard, setLeaderboard] = useState<User[]>([]);
 
-  
+  //glocbal socket
+  const [socket, setSocket] = useState<Socket | null>(null);
+
   const [result, setResult] = useState<any[] | null>(null);
   const [data, setData] = useState<any[] | null>(null);
   //   console.log("yai hai result",result);
@@ -48,6 +51,15 @@ const Store: React.FC<Props> = ({ children }) => {
     if (auth) {
       setGlobalname(auth);
     }
+  }, []);
+
+  useEffect(() => {
+    const newSocket = io("https://multi-player-quiz.onrender.com");
+    setSocket(newSocket);
+    
+    return () => {
+      newSocket.disconnect();
+    };
   }, []);
 
   async function handlerScore() {
@@ -87,6 +99,7 @@ const Store: React.FC<Props> = ({ children }) => {
         setResult,
         data,
         setData,
+        socket,
       }}
     >
       {children}

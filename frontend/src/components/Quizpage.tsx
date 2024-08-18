@@ -43,6 +43,7 @@ const Quizpage = () => {
   useEffect(() => {
     if (data) {
       setQuestions(data);
+      console.log(data)
     }
   }, [data]);
 

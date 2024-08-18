@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import vid from "../assets/vid.mp4";
-
+import { useContext } from "react";
+import { allContext } from "../Context/CreateStore";
 const Hero = () => {
+  const { socket } = useContext(allContext);
+  socket;
+
   return (
     <>
       <div className="flex flex-col md:flex-row gap-6 justify-start mx-4 my-8 md:m-8 md:mt-[80px] md:justify-center items-center">
@@ -62,7 +66,7 @@ const Hero = () => {
               Dive into the past and test your historical knowledge.
             </p>
             <Link
-              to={"/question"}
+              to={"/start"}
               className="inline-flex h-9 items-center justify-center rounded-md bg-black text-white px-4 text-sm font-medium shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 disabled:pointer-events-none disabled:opacity-50"
             >
               Start Quiz
@@ -77,12 +81,12 @@ const Hero = () => {
             <p className="text-sm md:text-base text-slate-500 text-center">
               Explore the wonders of science and put your knowledge to the test.
             </p>
-            <a
-              href="#"
+            <Link
+              to={"/start"}
               className="inline-flex h-9 items-center justify-center rounded-md bg-black text-white px-4 text-sm font-medium shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 disabled:pointer-events-none disabled:opacity-50"
             >
               Start Quiz
-            </a>
+            </Link>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-6 border rounded-lg shadow w-full md:w-1/3 bg-white">
@@ -93,12 +97,12 @@ const Hero = () => {
             <p className="text-sm md:text-base text-slate-500 text-center">
               Challenge your mathematical skills with our tricky quizzes.
             </p>
-            <a
-              href="#"
+            <Link
+              to={"/start"}
               className="inline-flex h-9 items-center justify-center rounded-md bg-black text-white px-4 text-sm font-medium shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 disabled:pointer-events-none disabled:opacity-50"
             >
               Start Quiz
-            </a>
+            </Link>
           </div>
         </div>
       </div>

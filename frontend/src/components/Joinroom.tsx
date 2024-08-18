@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { io, Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { allContext } from "../Context/CreateStore";
-
+import { Socket,io } from "socket.io-client";
 const JoinRoom = () => {
   const { setData, setResult } = useContext(allContext);
 
+  // const { socket } = useContext(allContext);
   const navigate = useNavigate();
   const [roomName, setRoomName] = useState("");
   const [username] = useState(localStorage.getItem("auth") || "");
@@ -15,6 +15,7 @@ const JoinRoom = () => {
   const [time, setTime] = useState<number | null>(null);
   const [remainingTime, setRemainingTime] = useState<number | null>(null);
   const [questionReceived, setQuestionReceived] = useState(false);
+  
 
   useEffect(() => {
     const newSocket = io("https://multi-player-quiz.onrender.com");
@@ -26,14 +27,21 @@ const JoinRoom = () => {
   }, []);
 
   useEffect(() => {
+    socket
     if (socket) {
       socket.on("user_connected", () => {
         setMessage("Successfully connected to server");
-      });
+      })
+       if(!socket){
+        console.log('no socket found in join')
+       }
+
+
 
       socket.on("time", ({ time }) => {
         console.log("Time received:", time);
         setTime(time);
+        console.log(time)
         setRemainingTime(Math.floor(time / 1000)); // Convert milliseconds to seconds
       });
 
@@ -66,7 +74,7 @@ const JoinRoom = () => {
       }, time);
 
       return () => clearTimeout(timer); // Cleanup the timeout on unmount or time change
-    } 
+    }
   }, [time, questionReceived, navigate]);
 
   useEffect(() => {
